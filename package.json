@@ -1,0 +1,9 @@
+{
+  "name": "daily-speaking-practice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daily technical topic + 10-minute recorded talk, with progress tracking.",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

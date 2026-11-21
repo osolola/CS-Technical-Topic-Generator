@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Speaking Practice</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◉</span>
+      <span>Daily Speaking Practice</span>
+    </div>
+    <nav>
+      <a href="#today" data-nav="today">Today</a>
+      <a href="#days" data-nav="days">Past days</a>
+      <a href="#progress" data-nav="progress">Progress</a>
+    </nav>
+    <div class="streak" id="streakPill" title="Consecutive days with a recording">🔥 <span id="streakNum">0</span> day streak</div>
+  </header>
+
+  <main>
+    <!-- ================= TODAY ================= -->
+    <section id="view-today" class="view">
+      <div class="date-line" id="dateLine"></div>
+
+      <div class="callout" id="prevFix" hidden>
+        <div class="callout-label">Focus from your last session</div>
+        <div class="callout-text" id="prevFixText"></div>
+      </div>
+
+      <ol class="stepper" id="stepper">
+        <li data-step="1"><span>1</span>Topic</li>
+        <li data-step="2"><span>2</span>Research</li>
+        <li data-step="3"><span>3</span>Record</li>
+        <li data-step="4"><span>4</span>Review</li>
+      </ol>
+
+      <!-- Step 1 -->
+      <article class="card" id="step1">
+        <div class="card-head">
+          <h2>Today's topic</h2>
+          <button class="btn ghost" id="rerollBtn" title="Skip this topic and get another">↻ Reroll</button>
+        </div>
+        <div class="tag" id="topicCategory"></div>
+        <h1 class="topic-title" id="topicTitle">Loading…</h1>
+        <p class="topic-summary" id="topicSummary"></p>
+        <h3>Your talk should answer</h3>
+        <ol class="questions" id="topicQuestions"></ol>
+        <a class="link" id="searchLink" target="_blank" rel="noopener">Search this topic ↗</a>
+      </article>
+
+      <!-- Step 2 -->
+      <article class="card" id="step2">
+        <div class="card-head">
+          <h2>Research &amp; notes</h2>
+          <div class="timer-group">
+            <div class="timer" id="researchTimer">10:00</div>
+            <button class="btn" id="researchStart">Start</button>
+            <button class="btn ghost" id="researchReset">Reset</button>
+          </div>
+        </div>
+        <p class="hint">10 minutes. Go deep. Write short bullet notes in your own words; they're the only thing you'll see while you talk.</p>
+        <textarea id="notes" rows="12" placeholder="• Problem it solves…&#10;• How it works…&#10;• Tradeoffs…&#10;• Real example…"></textarea>
+        <div class="save-state" id="notesState"></div>
+      </article>
+
+      <!-- Step 3 -->
+      <article class="card" id="step3">
+        <div class="card-head">
+          <h2>Record your talk</h2>
+          <div class="timer-group">
+            <div class="timer" id="recTimer">00:00</div>
+            <span class="target" id="recTarget">target 10:00</span>
+          </div>
+        </div>
+        <p class="hint">Talk for 10 minutes without stopping. Look only at your notes. If you stumble, keep going, the way you would in lecture.</p>
+        <div class="record-grid">
+          <div class="video-wrap">
+            <video id="preview" autoplay muted playsinline></video>
+            <div class="video-empty" id="previewEmpty">Camera is off</div>
+            <div class="rec-dot" id="recDot" hidden>● REC</div>
+          </div>
+          <aside class="notes-panel">
+            <div class="notes-panel-label">Your notes</div>
+            <pre id="notesMirror"></pre>
+          </aside>
+        </div>
+        <div class="controls">
+          <button class="btn" id="camBtn">Enable camera</button>
+          <button class="btn primary" id="recBtn" disabled>Start recording</button>
+          <label class="check" id="transcriptLabel">
+            <input type="checkbox" id="transcriptToggle" />
+            Live transcript (auto words-per-minute &amp; filler counts; Chrome sends the audio to Google for recognition)
+          </label>
+        </div>
+        <div class="live" id="liveStats" hidden>
+          <span>Words <b id="liveWords">0</b></span>
+          <span>Fillers <b id="liveFillers">0</b></span>
+        </div>
+        <div class="save-state" id="recState"></div>
+      </article>
+
+      <!-- Step 4 -->
+      <article class="card" id="step4">
+        <div class="card-head"><h2>Watch back &amp; review</h2></div>
+        <p class="hint">Watch the whole thing. Be honest. The ratings are only useful if they're real.</p>
+        <div class="video-wrap review" id="reviewWrap">
+          <video id="playback" controls playsinline></video>
+          <div class="video-empty" id="playbackEmpty">No recording yet today</div>
+        </div>
+        <div class="metrics" id="autoMetrics" hidden></div>
+
+        <div class="rubric" id="rubric"></div>
+
+        <div class="field-row">
+          <label for="fillerCount">Filler words you counted while watching</label>
+          <input type="number" min="0" id="fillerCount" placeholder="e.g. 14" />
+        </div>
+        <div class="field">
+          <label for="fixTomorrow">One thing to fix tomorrow</label>
+          <textarea id="fixTomorrow" rows="2" placeholder="e.g. Pause instead of saying 'um' between points"></textarea>
+        </div>
+        <details class="transcript-box" id="transcriptBox" hidden>
+          <summary>Transcript</summary>
+          <p id="transcriptText"></p>
+        </details>
+        <div class="controls">
+          <button class="btn primary" id="saveReview">Save review</button>
+          <span class="save-state" id="reviewState"></span>
+        </div>
+      </article>
+    </section>
+
+    <!-- ================= PROGRESS ================= -->
+    <section id="view-progress" class="view" hidden>
+      <h1 class="page-title">Your progress</h1>
+      <div class="tiles" id="tiles"></div>
+
+      <div class="charts" id="charts"></div>
+
+      <article class="card" id="compareCard">
+        <div class="card-head"><h2>Before / after</h2></div>
+        <p class="hint">Pick an early session and a recent one, then watch them side by side.</p>
+        <div class="compare-pickers">
+          <select id="cmpA"></select>
+          <select id="cmpB"></select>
+        </div>
+        <div class="compare-grid">
+          <div><div class="cmp-label" id="cmpALabel"></div><video id="cmpAVid" controls playsinline></video></div>
+          <div><div class="cmp-label" id="cmpBLabel"></div><video id="cmpBVid" controls playsinline></video></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h2>All sessions</h2></div>
+        <div class="table-wrap">
+          <table class="history">
+            <thead>
+              <tr><th>Date</th><th>Topic</th><th>Length</th><th>Avg score</th><th>Fillers/min</th><th>WPM</th><th>Fix tomorrow</th><th></th></tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- ================= PAST DAYS ================= -->
+    <section id="view-days" class="view" hidden>
+      <h1 class="page-title">Past days</h1>
+      <div class="days-list" id="daysList"></div>
+    </section>
+
+    <section id="view-day" class="view" hidden>
+      <div id="dayDetail"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
